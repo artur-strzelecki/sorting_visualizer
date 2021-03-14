@@ -5,3 +5,5 @@ __pycache__/
 venv/
 staticfiles/
 /main.py
+sort_app/__pycache__/
+sort_proj/__pycache__/
