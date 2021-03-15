@@ -19,5 +19,6 @@ import sort_app.views as v
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', v.index, name='index')
+    path('', v.index, name='index'),
+    path('insertion_sort/', v.insertion_sort_view, name='insertion_sort')
 ]

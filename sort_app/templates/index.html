@@ -5,6 +5,53 @@
     <title>Title</title>
 </head>
 <body>
-<h1> test </h1>
+    <button id="button"> safasfas</button>
+<div id="test">
+</div>
 </body>
 </html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    const timer = ms => new Promise(res => setTimeout(res, ms))
+
+    var button = document.getElementById("button");
+
+    button.onclick = function() {
+        div = document.getElementById("test");
+
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'insertion_sort' %}",
+            data:
+            {
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: async function(json_array)
+            {   
+                const data = JSON.parse(json_array);
+                for (let i=0; i < data.length; i++)
+                {
+                    for(let j=0; j < data[i].length; j++)
+                    {
+                        var p = document.createElement('p');
+                        p.textContent = data[i][j];
+                        div.appendChild(p); 
+                    }
+                    await timer(1000);
+                    if (i != data.length - 1)
+                    {
+                        div.innerHTML = "";
+                    }
+                }           
+
+            }
+         })
+    };
+
+
+
+
+
+</script>
