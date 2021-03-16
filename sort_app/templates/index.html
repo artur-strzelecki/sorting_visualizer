@@ -27,7 +27,7 @@
 
         span {
             color: black;
-            font-size: 20px;
+            font-size: 15px;
             padding-left: 15px;
         }
 
@@ -46,7 +46,7 @@
         </li>
     </ul>
     <span>Array size:</span>
-    <input type="range" class="form-range" min="10" max="45" id="generate_array">
+    <input type="range" class="form-range" min="10" max="45" id="generate_array">   
 </body>
 </html>
 
@@ -68,6 +68,7 @@
     let odd_even_sort_button = document.getElementById("odd_even_sort");
     let generate_array_slider = document.getElementById("generate_array");
 
+    // GENERATE ARRAY //
     generate_array_slider.oninput = function() {
         $.ajax(
         {
@@ -93,6 +94,7 @@
          })
     };
 
+    // INSERTION SORT //
     insertion_sort_button.onclick = function() {
         $.ajax(
         {
@@ -144,6 +146,67 @@
          })
     };
 
+    // BUBBLE SORT //
+    bubble_sort_button.onclick = function() {
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'bubble_sort' %}",
+            data:
+            {
+                array: array,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: async function(json_array)
+            {  
+                let count = 0;
+                let c = color('hsb(160, 100%, 50%)'); 
+                const data = JSON.parse(json_array);
+                for (let i=0; i < data.length; i++)
+                {
+                    clear();
+                    let exists = false;
+                    for(let j=0; j < data[i].length; j++)
+                    {
+                        let maxValue = 0;
+                        try {                           
+                            if (data[i][j] === data[i+1][j+1])
+                            {
+                                maxValue = data[i][j];
+                            }
+                        }                 
+                        catch {
+                        }
+
+                        if (data[i][j] === maxValue && exists === false)
+                        {
+                            fill(c);
+                            exists = true;
+                        }
+                        else
+                        {
+                            fill(0);
+                        }
+                        rect(j * 40 + 80, 20, 20, data[i][j] * 18);                  
+                    }
+                    count += 1;
+                    /* fast - 20
+                        medium - 50
+                        slow - 65
+                    */
+                    await timer(65);
+                }  
+
+                for (let k=0; k < data[count-1].length; k++)
+                {   
+                    fill(c);
+                    rect(k * 40 + 80, 20, 20, data[count-1][k] * 18);
+                    await timer(30);
+                }
+
+            }
+         })
+    };
 
 
 

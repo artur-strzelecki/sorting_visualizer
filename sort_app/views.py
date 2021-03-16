@@ -34,7 +34,21 @@ def insertion_sort_view(request):
     return HttpResponse('')
 
 def bubble_sort_view(request):
-    pass
+    if request.method == 'POST':
+        array = request.POST.getlist('array[]')
+        sort_return = []
+
+        # convert from string list to int list
+        for i in range(0, len(array)): 
+            array[i] = int(array[i]) 
+
+        for array in bubble_sort(array):
+            sort_return.extend([list(array)])
+
+        sort_json = json.dumps(sort_return)
+        return HttpResponse(sort_json)
+
+    return HttpResponse('')
 
 def odd_even_sort_view(request):
     pass
