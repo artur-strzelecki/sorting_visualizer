@@ -9,7 +9,7 @@ def index(request):
     return render(request, 'index.html')
 
 def insertion_sort_view(request):
-    array = generate_array(10)
+    array = generate_array(30)
     sort_return = []
     for array in insertion_sort(array):
         sort_return.extend([list(array)])
