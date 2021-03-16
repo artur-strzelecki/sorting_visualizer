@@ -14,17 +14,24 @@ def generate_array_view(request):
         array = generate_array(int(size))
         array_json = json.dumps(array)
         return HttpResponse(array_json)
-    else:
-        return HttpResponse('')
+    return HttpResponse('')
 
 def insertion_sort_view(request):
-    array = generate_array(30)
-    sort_return = []
-    for array in insertion_sort(array):
-        sort_return.extend([list(array)])
+    if request.method == 'POST':
+        array = request.POST.getlist('array[]')
+        sort_return = []
 
-    sort_json = json.dumps(sort_return)
-    return HttpResponse(sort_json)
+        # convert from string list to int list
+        for i in range(0, len(array)): 
+            array[i] = int(array[i]) 
+
+        for array in insertion_sort(array):
+            sort_return.extend([list(array)])
+
+        sort_json = json.dumps(sort_return)
+        return HttpResponse(sort_json)
+
+    return HttpResponse('')
 
 def bubble_sort_view(request):
     pass
