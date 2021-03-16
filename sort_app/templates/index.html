@@ -21,14 +21,18 @@
             color:#00a8ff;
         }
 
-        #generate_array {
+        #generate_array, #speed_level {
             width: 300px;
         }
 
         span {
             color: black;
-            font-size: 15px;
-            padding-left: 15px;
+            font-size: 17px;
+        }
+
+        #div_array {
+            margin-left: 15px;
+            margin-right: 30px;
         }
 
     </style>
@@ -44,9 +48,17 @@
         <li class="nav-item">
             <a id="odd_even_sort" class="nav-link">Odd Even Sort</a>
         </li>
-    </ul>
-    <span>Array size:</span>
-    <input type="range" class="form-range" min="10" max="45" id="generate_array">   
+    </ul><br>
+    <div class="d-flex flex-row mb-3">
+        <div id="div_array" class="d-flex flex-column">
+            <span id="value_array">Array size:</span>
+            <input type="range" class="form-range" min="10" max="45" id="generate_array">  
+        </div>
+        <div id="div_speed" class="d-flex flex-column">
+            <span id="value_speed">Speed:</span>
+            <input type="range" class="form-range" min="1" max="3" step="1" id="speed_level">              
+        </div>
+    </div>  
 </body>
 </html>
 
@@ -55,9 +67,15 @@
 <script>
     const timer = ms => new Promise(res => setTimeout(res, ms))
     let array = [];
+    let speed = '2';
+
+    // INTIAL SPEED LEVEL
+    let span_speed = document.getElementById("value_speed");
+    span_speed.innerHTML = "Speed: " + speed;
+
 
     function setup() {
-        createCanvas(windowWidth, windowHeight * 0.91);
+        createCanvas(windowWidth, windowHeight * 0.84);
         fill(0);
         background('#dcdde1');
         noStroke();
@@ -67,9 +85,19 @@
     let bubble_sort_button = document.getElementById("bubble_sort");
     let odd_even_sort_button = document.getElementById("odd_even_sort");
     let generate_array_slider = document.getElementById("generate_array");
+    let speed_level_slider = document.getElementById("speed_level");
+
+    // SPEED LEVEL //
+    speed_level_slider.oninput = function() {
+        let span_array = document.getElementById("value_speed");
+        span_array.innerHTML = "Speed: " + this.value;
+        speed = this.value;
+    };
 
     // GENERATE ARRAY //
     generate_array_slider.oninput = function() {
+        let span_array = document.getElementById("value_array");
+        span_array.innerHTML = "Array size: " + this.value;
         $.ajax(
         {
             method: "POST",
@@ -88,7 +116,7 @@
                 array = data;
                 for(let i=0; i < data.length; i++)
                 {                        
-                    rect(i * 40 + 80, 20, 20, data[i] * 18);                  
+                    rect(i * 40 + 80, 20, 20, data[i] * 17);                  
                 }
             }
          })
@@ -96,6 +124,25 @@
 
     // INSERTION SORT //
     insertion_sort_button.onclick = function() {
+        /* SPEED LEVELS
+            1. 100
+            2. 200
+            3. 400
+        */
+        let speed_to_timer = 0;
+        if (speed === '1')
+        {
+            speed_to_timer = 100;
+        }
+        else if (speed === '2')
+        {
+            speed_to_timer = 200;
+        }
+        else 
+        {
+            speed_to_timer = 350;
+        }
+
         $.ajax(
         {
             method: "POST",
@@ -125,29 +172,46 @@
                         {
                             fill(0);
                         }
-                        rect(j * 40 + 80, 20, 20, data[i][j] * 18);                  
+                        rect(j * 40 + 80, 20, 20, data[i][j] * 17);                  
                     }
                     count += 1;
-                    /* fast - 100
-                        medium - 250
-                        slow - 400
-                    */
-                    await timer(100);
+                    await timer(speed_to_timer);
                 }  
-
-                for (let k=0; k < data[count-1].length; k++)
-                {   
-                    fill(c);
-                    rect(k * 40 + 80, 20, 20, data[count-1][k] * 18);
-                    await timer(30);
+                if (count > 0)
+                {
+                    for (let k=0; k < data[count-1].length; k++)
+                    {   
+                        fill(c);
+                        rect(k * 40 + 80, 20, 20, data[count-1][k] * 17);
+                        await timer(20);
+                    }
                 }
-
             }
          })
     };
 
     // BUBBLE SORT //
     bubble_sort_button.onclick = function() {
+        /* SPEED LEVELS
+            1. 30
+            2. 50
+            3. 70
+        */
+        let speed_to_timer = 0;
+
+        if (speed === '1')
+        {
+            speed_to_timer = 30;
+        }
+        else if (speed === '2')
+        {
+            speed_to_timer = 50;
+        }
+        else 
+        {
+            speed_to_timer = 70;
+        }
+
         $.ajax(
         {
             method: "POST",
@@ -190,20 +254,18 @@
                         rect(j * 40 + 80, 20, 20, data[i][j] * 18);                  
                     }
                     count += 1;
-                    /* fast - 20
-                        medium - 50
-                        slow - 65
-                    */
-                    await timer(65);
+                    await timer(speed_to_timer);
                 }  
 
-                for (let k=0; k < data[count-1].length; k++)
-                {   
-                    fill(c);
-                    rect(k * 40 + 80, 20, 20, data[count-1][k] * 18);
-                    await timer(30);
+                if (count > 0)
+                {
+                    for (let k=0; k < data[count-1].length; k++)
+                    {   
+                        fill(c);
+                        rect(k * 40 + 80, 20, 20, data[count-1][k] * 18);
+                        await timer(20);
+                    }
                 }
-
             }
          })
     };
