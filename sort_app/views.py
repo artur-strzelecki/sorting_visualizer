@@ -9,9 +9,13 @@ def index(request):
     return render(request, 'index.html')
 
 def generate_array_view(request):
-    array = generate_array(30)
-    array_json = json.dumps(array)
-    return HttpResponse(array_json)
+    if request.method == 'POST':
+        size = request.POST['size']
+        array = generate_array(int(size))
+        array_json = json.dumps(array)
+        return HttpResponse(array_json)
+    else:
+        return HttpResponse('')
 
 def insertion_sort_view(request):
     array = generate_array(30)
