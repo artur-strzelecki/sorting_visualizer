@@ -8,6 +8,11 @@ import json
 def index(request):
     return render(request, 'index.html')
 
+def generate_array_view(request):
+    array = generate_array(30)
+    array_json = json.dumps(array)
+    return HttpResponse(array_json)
+
 def insertion_sort_view(request):
     array = generate_array(30)
     sort_return = []
@@ -16,4 +21,12 @@ def insertion_sort_view(request):
 
     sort_json = json.dumps(sort_return)
     return HttpResponse(sort_json)
+
+def bubble_sort_view(request):
+    pass
+
+def odd_even_sort_view(request):
+    pass
+
+
 
