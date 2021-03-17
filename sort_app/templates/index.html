@@ -71,7 +71,7 @@
 
     // INTIAL SPEED LEVEL
     let span_speed = document.getElementById("value_speed");
-    span_speed.innerHTML = "Speed: " + speed;
+    span_speed.innerHTML = "Speed: Average";
 
 
     function setup() {
@@ -90,7 +90,19 @@
     // SPEED LEVEL //
     speed_level_slider.oninput = function() {
         let span_array = document.getElementById("value_speed");
-        span_array.innerHTML = "Speed: " + this.value;
+        let speed_name = '';
+
+        if (this.value === '1')
+        {
+            speed_name = 'Fast';
+        } else if (this.value === '2')
+        {
+            speed_name = 'Average';
+        } else {
+            speed_name = 'Slow';
+        }
+
+        span_array.innerHTML = "Speed: " + speed_name;
         speed = this.value;
     };
 
@@ -270,6 +282,84 @@
          })
     };
 
+    // ODD EVEN SORT //
+    odd_even_sort_button.onclick = function() {
+        /* SPEED LEVELS
+            1. 30
+            2. 50
+            3. 70
+        */
+        let speed_to_timer = 0;
+
+        if (speed === '1')
+        {
+            speed_to_timer = 50;
+        }
+        else if (speed === '2')
+        {
+            speed_to_timer = 75;
+        }
+        else 
+        {
+            speed_to_timer = 100;
+        }
+
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'odd_even_sort' %}",
+            data:
+            {
+                array: array,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: async function(json_array)
+            {  
+                let count = 0;
+                let c = color('hsb(160, 100%, 50%)'); 
+                const data = JSON.parse(json_array);
+                for (let i=0; i < data.length; i++)
+                {
+                    clear();
+                    let exists = false;
+                    for(let j=0; j < data[i].length; j++)
+                    {
+                        let maxValue = 0;
+                        try {                           
+                            if (data[i][j] === data[i+1][j+1])
+                            {
+                                maxValue = data[i][j];
+                            }
+                        }                 
+                        catch {
+                        }
+
+                        if (data[i][j] === maxValue && exists === false)
+                        {
+                            fill(c);
+                        }
+                        else
+                        {
+                            fill(0);
+                        }
+                        rect(j * 40 + 80, 20, 20, data[i][j] * 18);                  
+                    }
+                    count += 1;
+                    await timer(speed_to_timer);
+                }  
+
+                if (count > 0)
+                {
+                    for (let k=0; k < data[count-1].length; k++)
+                    {   
+                        fill(c);
+                        rect(k * 40 + 80, 20, 20, data[count-1][k] * 18);
+                        await timer(20);
+                    }
+                }
+            }
+         })
+    };
 
 
 

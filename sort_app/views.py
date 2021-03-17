@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, StreamingHttpResponse
 from methods.insertion_sort import insertion_sort
 from methods.bubble_sort import bubble_sort
+from methods.odd_even_sort import odd_even_sort
 from generate_array import generate_array
 import json
 
@@ -51,7 +52,21 @@ def bubble_sort_view(request):
     return HttpResponse('')
 
 def odd_even_sort_view(request):
-    pass
+    if request.method == 'POST':
+        array = request.POST.getlist('array[]')
+        sort_return = []
+
+        # convert from string list to int list
+        for i in range(0, len(array)): 
+            array[i] = int(array[i]) 
+
+        for array in odd_even_sort(array):
+            sort_return.extend([list(array)])
+
+        sort_json = json.dumps(sort_return)
+        return HttpResponse(sort_json)
+
+    return HttpResponse('')   
 
 
 
