@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Sorting visualizer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 
     <style>
@@ -48,6 +48,9 @@
         <li class="nav-item">
             <a id="odd_even_sort" class="nav-link">Odd Even Sort</a>
         </li>
+        <li class="nav-item">
+            <a id="selection_sort" class="nav-link">Selection Sort</a>
+        </li>
     </ul><br>
     <div class="d-flex flex-row mb-3">
         <div id="div_array" class="d-flex flex-column">
@@ -84,6 +87,7 @@
     let insertion_sort_button = document.getElementById("insertion_sort");
     let bubble_sort_button = document.getElementById("bubble_sort");
     let odd_even_sort_button = document.getElementById("odd_even_sort");
+    let selection_sort_button = document.getElementById("selection_sort");
     let generate_array_slider = document.getElementById("generate_array");
     let speed_level_slider = document.getElementById("speed_level");
 
@@ -139,7 +143,7 @@
         /* SPEED LEVELS
             1. 100
             2. 200
-            3. 400
+            3. 350
         */
         let speed_to_timer = 0;
         if (speed === '1')
@@ -285,9 +289,9 @@
     // ODD EVEN SORT //
     odd_even_sort_button.onclick = function() {
         /* SPEED LEVELS
-            1. 30
-            2. 50
-            3. 70
+            1. 50
+            2. 75
+            3. 100
         */
         let speed_to_timer = 0;
 
@@ -321,7 +325,6 @@
                 for (let i=0; i < data.length; i++)
                 {
                     clear();
-                    let exists = false;
                     for(let j=0; j < data[i].length; j++)
                     {
                         let maxValue = 0;
@@ -334,7 +337,7 @@
                         catch {
                         }
 
-                        if (data[i][j] === maxValue && exists === false)
+                        if (data[i][j] === maxValue)
                         {
                             fill(c);
                         }
@@ -361,6 +364,81 @@
          })
     };
 
+    // SELECTION SORT //
+    selection_sort_button.onclick = function() {
+        /* SPEED LEVELS
+            1. 100
+            2. 200
+            3. 350
+        */
+        let speed_to_timer = 0;
+        if (speed === '1')
+        {
+            speed_to_timer = 100;
+        }
+        else if (speed === '2')
+        {
+            speed_to_timer = 200;
+        }
+        else 
+        {
+            speed_to_timer = 350;
+        }
 
+        $.ajax(
+        {
+            method: "POST",
+            url: "{% url 'selection_sort' %}",
+            data:
+            {
+                array: array,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: async function(json_array)
+            {  
+                let count = 0;
+                let c = color('hsb(160, 100%, 50%)'); 
+                const data = JSON.parse(json_array);
+                for (let i=0; i < data.length; i++)
+                {
+                    clear();
+
+                    // find min value 
+                    let minValue = Math.max(...data[i]);
+                    for (let h=i; h < data[i].length; h++)
+                    {
+                        if (data[i][h] < minValue)
+                        {
+                            minValue = data[i][h];
+                        }                    
+                    }
+
+                    for(let j=0; j < data[i].length; j++)
+                    {
+                        if (data[i][j] === minValue)
+                        {
+                            fill(c);
+                        }
+                        else
+                        {
+                            fill(0);
+                        }
+                        rect(j * 40 + 80, 20, 20, data[i][j] * 17);                  
+                    }
+                    count += 1;
+                    await timer(speed_to_timer);
+                }  
+                if (count > 0)
+                {
+                    for (let k=0; k < data[count-1].length; k++)
+                    {   
+                        fill(c);
+                        rect(k * 40 + 80, 20, 20, data[count-1][k] * 17);
+                        await timer(20);
+                    }
+                }
+            }
+         })
+    };
 
 </script>
