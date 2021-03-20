@@ -11,7 +11,7 @@ def index(request):
     return render(request, 'index.html')
 
 def generate_array_view(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.is_ajax():
         size = request.POST['size']
         array = generate_array(int(size))
         array_json = json.dumps(array)
@@ -19,7 +19,7 @@ def generate_array_view(request):
     return HttpResponse('')
 
 def insertion_sort_view(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.is_ajax():
         array = request.POST.getlist('array[]')
         sort_return = []
 
@@ -36,7 +36,7 @@ def insertion_sort_view(request):
     return HttpResponse('')
 
 def bubble_sort_view(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.is_ajax():
         array = request.POST.getlist('array[]')
         sort_return = []
 
@@ -53,7 +53,7 @@ def bubble_sort_view(request):
     return HttpResponse('')
 
 def odd_even_sort_view(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.is_ajax():
         array = request.POST.getlist('array[]')
         sort_return = []
 
@@ -71,7 +71,7 @@ def odd_even_sort_view(request):
 
 
 def selection_sort_view(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.is_ajax():
         array = request.POST.getlist('array[]')
         sort_return = []
 
