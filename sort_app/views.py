@@ -12,7 +12,7 @@ def index(request):
 
 def generate_array_view(request):
     if request.method == 'POST' and request.is_ajax():
-        size = request.POST.get('size', False)
+        size = request.POST.get('size', 0)
         array = generate_array(int(size))
         array_json = json.dumps(array)
         return HttpResponse(array_json)
